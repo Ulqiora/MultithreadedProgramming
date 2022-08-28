@@ -43,7 +43,7 @@ void Graph::exportGraphToDot(std::string filename) {
     } else {
         file << "graph {" << std::endl;
     }
-    Matrix temp = adjacencyMatrix;
+    SquareMatrix temp = adjacencyMatrix;
     int sizeMatrix = adjacencyMatrix.size();
     for (int i = 0; i < sizeMatrix; i++) {
         for (int j = (typeDirection == TypeGraphByDirection::UNDIRECRED ? i : 0); j < sizeMatrix; j++) {
@@ -55,7 +55,7 @@ void Graph::exportGraphToDot(std::string filename) {
 }
 
 void Graph::printInfoAboutEdge(int firstNode, int secondNode, std::ofstream& file,
-                               const std::string& EdgesInFile, const Matrix& temp) {
+                               const std::string& EdgesInFile, const SquareMatrix& temp) {
     std::string first = std::to_string(firstNode);
     std::string second = std::to_string(secondNode);
     std::string weight = (typeWeights == TypeGraphByWeights::WEIGHTED)

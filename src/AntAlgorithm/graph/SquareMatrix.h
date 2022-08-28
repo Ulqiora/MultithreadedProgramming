@@ -6,27 +6,27 @@
 #include <limits>
 #include <string>
 namespace s21 {
-class Matrix {
+class SquareMatrix {
  private:
   int _size;
   double** matrixData;
   void allocateMemory();
   void freeMemory();
-  void copyMatrixData(const Matrix& other);
+  void copyMatrixData(const SquareMatrix& other);
 
  public:
-  Matrix(int newSize);
-  Matrix();
-  Matrix(const Matrix& other);
+  SquareMatrix(int newSize);
+  SquareMatrix();
+  SquareMatrix(const SquareMatrix& other);
   double& operator()(int i, int j) const { return matrixData[i][j]; }
-  ~Matrix() { freeMemory(); }
+  ~SquareMatrix() { freeMemory(); }
   int size() const { return _size; }
-  const Matrix& operator=(const Matrix& other);
-  bool operator==(const Matrix& other);
+  const SquareMatrix& operator=(const SquareMatrix& other);
+  bool operator==(const SquareMatrix& other);
   void setSize(int newNumOfRows);
   void loadMatrix(std::ifstream& file);
   void setValueForAll(double value);
   void mul_number(const double num);
-  Matrix& operator*=(const double value);
+  SquareMatrix& operator*=(const double value);
 };
 }  // namespace s21

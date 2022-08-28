@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 
-#include "Matrix.h"
+#include "SquareMatrix.h"
 namespace s21 {
 enum class TypeGraphByDirection { UNDIRECRED = 0, DIRECTED };
 
@@ -13,13 +13,13 @@ enum class TypeGraphByWeights { UNWEIGHTED = 0, WEIGHTED };
 class Graph {
    private:
     std::string name;
-    Matrix adjacencyMatrix;
+    SquareMatrix adjacencyMatrix;
     TypeGraphByDirection typeDirection;
     TypeGraphByWeights typeWeights;
     bool positiveWeights = true;
     void initTypes();
     void printInfoAboutEdge(int firstNode, int secondNode, std::ofstream& file,
-                            const std::string& EdgesInFile, const Matrix& temp);
+                            const std::string& EdgesInFile, const SquareMatrix& temp);
 
    public:
     Graph() {}
@@ -34,7 +34,7 @@ class Graph {
     bool hasNegativeWeights() { return !positiveWeights; }
     bool operator==(const Graph& other) { return adjacencyMatrix == other.adjacencyMatrix; }
     bool isCompliteGraph();
-    Matrix getMatrix() { return adjacencyMatrix; }
+    SquareMatrix getMatrix() { return adjacencyMatrix; }
 };
 
 }  // namespace s21

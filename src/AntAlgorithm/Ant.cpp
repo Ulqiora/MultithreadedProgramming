@@ -27,14 +27,14 @@ namespace s21{
         return result;
     }
 
-    double Ant::calculateNumerator(std::map<int, double>* dictionaryOfAvailablePaths, const Matrix& pheromonesMap,
+    double Ant::calculateNumerator(std::map<int, double>* dictionaryOfAvailablePaths, const SquareMatrix& pheromonesMap,
                               int currentIndex) {
         double eta = pow(1 / (*dictionaryOfAvailablePaths)[currentIndex], beta);
         double teta = pow(pheromonesMap(path.back(), currentIndex), alpha);
         return eta * teta;
     }
 
-    double Ant::calcDenominator(std::map<int, double>* dictionaryOfAvailablePaths, const Matrix& pheromonesMap) {
+    double Ant::calcDenominator(std::map<int, double>* dictionaryOfAvailablePaths, const SquareMatrix& pheromonesMap) {
         double sumOfAllProbabilities = 0.0;
         for (auto& i : (*dictionaryOfAvailablePaths)) {
             sumOfAllProbabilities +=
@@ -43,7 +43,7 @@ namespace s21{
         return sumOfAllProbabilities;
     }
 
-    std::map<int, double>* Ant::calcProbabilities(Graph* graph, const Matrix& pheromonesMap) {
+    std::map<int, double>* Ant::calcProbabilities(Graph* graph, const SquareMatrix& pheromonesMap) {
         std::map<int, double>* probabilities = new std::map<int, double>;
         std::map<int, double>* dictionaryOfAvailablePaths = createDictionaryOfAvailablePaths(graph);
         double numeratorProbability = 0.0;
@@ -73,7 +73,7 @@ namespace s21{
         }
     }
 
-    void Ant::findPath(Graph* graph, const Matrix& pheromonesMap) {
+    void Ant::findPath(Graph* graph, const SquareMatrix& pheromonesMap) {
         int sizeGraph = graph->size();
         initToStart(sizeGraph);
         for (int i = 1; i < sizeGraph; ++i) {
@@ -84,7 +84,7 @@ namespace s21{
         pathLength += (*graph)(path.back(), path.front());
         path.push_back(path.front());
     }
-    void Ant::updatePheromones(Matrix* pheromonesMap) {
+    void Ant::updatePheromones(SquareMatrix* pheromonesMap) {
         double lengthInverse = 1.0 / pathLength;
         int sizeMap = pheromonesMap->size();
         for (int i = 0; i < sizeMap; ++i) {

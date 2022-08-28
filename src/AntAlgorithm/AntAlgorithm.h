@@ -13,7 +13,7 @@ namespace s21 {
 class AntAlgorithm {
 private:
     Graph* graph = nullptr;
-    Matrix pheromoneMap;
+    SquareMatrix pheromoneMap;
     std::vector<Ant> ants;
     std::vector<std::thread> threads;
     const int numOfIteration = 30;

@@ -20,17 +20,17 @@ class Ant {
    private:
     void initToStart(int sizeOfGraph);
     std::map<int, double>* createDictionaryOfAvailablePaths(Graph* graph);
-    double calculateNumerator(std::map<int, double>* dictionaryOfAvailablePaths, const Matrix& pheromonesMap,
+    double calculateNumerator(std::map<int, double>* dictionaryOfAvailablePaths, const SquareMatrix& pheromonesMap,
                               int currentIndex);
-    double calcDenominator(std::map<int, double>* dictionaryOfAvailablePaths, const Matrix& pheromonesMap);
-    std::map<int, double>* calcProbabilities(Graph* graph, const Matrix& pheromonesMap);
+    double calcDenominator(std::map<int, double>* dictionaryOfAvailablePaths, const SquareMatrix& pheromonesMap);
+    std::map<int, double>* calcProbabilities(Graph* graph, const SquareMatrix& pheromonesMap);
 
     void chooseWay(Graph* graph, std::map<int, double>* probabilities);
 
    public:
     Ant() = default;
-    void findPath(Graph* graph, const Matrix& pheromonesMap);
-    void updatePheromones(Matrix* pheromonesMap);
+    void findPath(Graph* graph, const SquareMatrix& pheromonesMap);
+    void updatePheromones(SquareMatrix* pheromonesMap);
     double getPathLength() { return pathLength; }
     std::vector<int> getPath() { return path; }
 };

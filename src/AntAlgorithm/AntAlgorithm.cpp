@@ -57,13 +57,11 @@ void AntAlgorithm::createAnts() {
     threads.resize(graph->size());
 }
 
-void AntAlgorithm::setGraph(Graph* other){
-    graph=other;
-}
+void AntAlgorithm::setGraph(Graph* other) { graph = other; }
 
 TsmResult AntAlgorithm::start(TypeOfRun type) {
     if (type == TypeOfRun::MULTI_CONVEYOR)
-        throw std::invalid_argument("This type is not applicable to this algorithm!"+__LINE__);
+        throw std::invalid_argument("This type is not applicable to this algorithm!");
     TsmResult result;
     if (!graph) throw std::invalid_argument("This graph is empty");
     initPheromonesMap();

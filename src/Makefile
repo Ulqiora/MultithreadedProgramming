@@ -8,7 +8,7 @@ ifeq ($(shell uname -s), Linux)
 	GTESTFLAGS+= -lpthread -lrt
 endif
 #              Файлы для основного проекта
-PROJECT_FILES_SOURCES= main_debug.cpp Matrix.cpp graph.cpp Ant.cpp AntAlgorithm.cpp 
+PROJECT_FILES_SOURCES= main_debug.cpp SquareMatrix.cpp graph.cpp Ant.cpp AntAlgorithm.cpp 
 PROJECT_FILES_OBJECTS=$(addprefix $(BD)/,$(PROJECT_FILES_SOURCES:.cpp=.o))
 #              Файлы для тестов
 # TESTS_FILES_SOURCES=main_test.cpp Matrix.cpp graph.cpp GraphAlgorithms.cpp MatrixBnB.cpp Ant.cpp AntAlgorithm.cpp ConsoleView.cpp
@@ -33,6 +33,9 @@ debug:$(PROJECT_FILES_OBJECTS)
 	./$(BD)/$@
 test: clean $(TESTS_FILES_OBJECTS)
 	$(CC) -g  $^ -o $(BD)/test   $(GTESTFLAGS)
+	./$(BD)/$@
+
+start:
 	./$(BD)/$@
 
 clean:

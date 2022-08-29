@@ -38,27 +38,42 @@ void AntAlgorithm::updateTsmResult(TsmResult* result, int& numOfIteration) {
     }
 }
 
+void AntAlgorithm::runAntMultiThreads() {
+    for (int i = 0; i < graph->size(); ++i) ants[i].findPath(graph, pheromoneMap);
+}
+void AntAlgorithm::runAntOneThread() {
+    for (int i = 0; i < graph->size(); ++i) {
+        threads[i] =
+            std::thread([&ant = (ants[i]), g = graph, &pM = pheromoneMap]() { ant.findPath(g, pM); });
+    }
+    for (auto& thread : threads) {
+        thread.join();
+    }
+}
+
 void AntAlgorithm::createAnts() {
     ants.clear();
     ants.resize(graph->size(), Ant());
     threads.resize(graph->size());
 }
 
-TsmResult AntAlgorithm::start(Graph* graphTest) {
+void AntAlgorithm::setGraph(Graph* other){
+    graph=other;
+}
+
+TsmResult AntAlgorithm::start(TypeOfRun type) {
+    if (type == TypeOfRun::MULTI_CONVEYOR)
+        throw std::invalid_argument("This type is not applicable to this algorithm!"+__LINE__);
     TsmResult result;
-    if (!graphTest) throw std::invalid_argument("This graph is empty");
-    graph = graphTest;
+    if (!graph) throw std::invalid_argument("This graph is empty");
     initPheromonesMap();
-    for (int numOfIteration = 0; numOfIteration != 100;numOfIteration++) {
+    for (int numOfIteration = 0; numOfIteration != 100; numOfIteration++) {
         createAnts();
-        // for (int i=0;i<graph->size();++i) {
-        //     threads[i]=std::thread([&ant=(ants[i]),g=graph,&pM=pheromoneMap](){ant.findPath(g,pM);});
-        // }
-        // for(auto& thread:threads){
-        //     thread.join();
-        // }
-        for(int i=0;i<graph->size();++i)
-            ants[i].findPath(graph,pheromoneMap);
+        if (type == TypeOfRun::ONE)
+            runAntOneThread();
+        else
+            runAntMultiThreads();
+        for (int i = 0; i < graph->size(); ++i) ants[i].findPath(graph, pheromoneMap);
         updatePheromoneMap();
         updateTsmResult(&result, numOfIteration);
     }

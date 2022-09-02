@@ -1,19 +1,29 @@
 #include "AntAlgorithm/AntAlgorithm.h"
 #include "SharedFiles/TimeTest.h"
 #include "SharedFiles/TypeOfRun.h"
+#include "Winograd/WinogradAlgorithm.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
+
+void foo(){
+    std::cout<<"KU";
+}
 int main(){
-
-    std::cout<<std::thread::hardware_concurrency();
-    s21::Graph g1;
-    g1.loadGraphFromFile("../materials/matrices/11.txt");
-
-    s21::AntAlgorithm ant;
-    ant.setGraph(&g1);
+    s21::Matrix m1(2,2),m2(2,2);
+    // m1(0,0)=1, m1(0,1)=2;
+    // m1(1,0)=3, m1(1,1)=4;
+    // m2(0,0)=1, m2(0,1)=2;
+    // m2(1,0)=3, m2(1,1)=4;
+    m1.setRandom(1000,1000);
+    m2.setRandom(1000,1000);
+    s21::WinogradAlgorithm WA;
+    WA.setMatrixFirst(m1);
+    WA.setMatrixSecond(m2);
+    WA.setNumOfThreads(16);
     s21::TimeTest tt;
-    std::cout<<tt.startest<s21::AntAlgorithm,std::chrono::milliseconds>(ant,s21::TypeOfRun::ONE,100)<<'\n';
-    std::cout<<tt.startest<s21::AntAlgorithm,std::chrono::milliseconds>(ant,s21::TypeOfRun::MILTI_CLASSIC,100)<<'\n';
+    int time=tt.startest<s21::WinogradAlgorithm,std::chrono::milliseconds,s21::Matrix>(WA,s21::TypeOfRun::MULTI_CLASSIC_WITH_NUM,10);
+    std::cout<<"Total Time:           "<<time;
+    std::cout<<"\nAlgorithm finished\n";
     return 0;
 }

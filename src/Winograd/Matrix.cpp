@@ -2,38 +2,60 @@
 
 #include <cmath>
 #include <stdexcept>
+#include <random>
 namespace s21 {
-Matrix::Matrix() { allocateMemory(3, 3); }
+
+void Matrix::setRandom(int rows, int cols)
+{
+    if (!(rows > 0 && cols > 0)) std::out_of_range("Incorrect input, matrix should have both sizes > 0");
+    destroyMatrix();
+    newMatrix(rows,cols);
+    std::random_device rd;
+    std::default_random_engine engine(rd());
+    std::uniform_real_distribution<double> dist(-100, 100);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            _matrix[i][j] = dist(engine);
+        }
+    }
+}
+
+// Constructors
+Matrix::Matrix() { newMatrix(3, 3); }
 
 Matrix::Matrix(int rows, int cols) {
     if (rows > 0 && cols > 0) {
-        allocateMemory(rows, cols);
+        newMatrix(rows, cols);
     } else {
         throw std::out_of_range("Incorrect input, matrix should have both sizes > 0");
     }
 }
 
-Matrix::Matrix(const Matrix& other) : Matrix(other.rows, other.cols) { copyMatrix(other.matrix); }
-
-Matrix::Matrix(Matrix&& other) {
-    rows = other.rows;
-    cols = other.cols;
-    matrix = other.matrix;
-    other.matrix = nullptr;
+Matrix::Matrix(const Matrix& other) : Matrix(other._rows, other._cols) {
+    copyMatrix(other._matrix);
 }
 
+Matrix::Matrix(Matrix&& other) {
+    _rows = other._rows;
+    _cols = other._cols;
+    _matrix = other._matrix;
+    other._matrix = nullptr;
+}
+
+// Destructor
 Matrix::~Matrix() {
-    if (matrix) {
-        freeMemory();
+    if (_matrix) {
+        destroyMatrix();
     }
 }
 
+// Methods
 bool Matrix::eq_matrix(const Matrix& other) const {
     bool result = true;
     if (isEqualSizes(other)) {
-        for (int i = 0; i < rows && result; i++) {
-            for (int j = 0; j < cols && result; j++) {
-                if (fabs(matrix[i][j] - other.matrix[i][j]) > 1e-7) result = false;
+        for (int i = 0; i < _rows && result; i++) {
+            for (int j = 0; j < _cols && result; j++) {
+                if (fabs(_matrix[i][j] - other._matrix[i][j]) > 1e-7) result = false;
             }
         }
     } else {
@@ -44,9 +66,9 @@ bool Matrix::eq_matrix(const Matrix& other) const {
 
 void Matrix::sum_matrix(const Matrix& other) {
     if (isEqualSizes(other)) {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                matrix[i][j] = matrix[i][j] + other.matrix[i][j];
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < _cols; j++) {
+                _matrix[i][j] = _matrix[i][j] + other._matrix[i][j];
             }
         }
     } else {
@@ -56,9 +78,9 @@ void Matrix::sum_matrix(const Matrix& other) {
 
 void Matrix::sub_matrix(const Matrix& other) {
     if (isEqualSizes(other)) {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                matrix[i][j] = matrix[i][j] - other.matrix[i][j];
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < _cols; j++) {
+                _matrix[i][j] = _matrix[i][j] - other._matrix[i][j];
             }
         }
     } else {
@@ -67,19 +89,19 @@ void Matrix::sub_matrix(const Matrix& other) {
 }
 
 void Matrix::mul_number(const double num) {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            matrix[i][j] *= num;
+    for (int i = 0; i < _rows; i++) {
+        for (int j = 0; j < _cols; j++) {
+            _matrix[i][j] *= num;
         }
     }
 }
 
 void Matrix::mul_matrix(const Matrix& other) {
-    if (cols == other.rows) {
-        Matrix result(rows, other.cols);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < other.cols; j++) {
-                for (int c = 0; c < cols; c++) result.matrix[i][j] += matrix[i][c] * other.matrix[c][j];
+    if (_cols == other._rows) {
+        Matrix result(_rows, other._cols);
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < other._cols; j++) {
+                for (int c = 0; c < _cols; c++) result._matrix[i][j] += _matrix[i][c] * other._matrix[c][j];
             }
         }
         *this = result;
@@ -90,9 +112,9 @@ void Matrix::mul_matrix(const Matrix& other) {
     }
 }
 
-int Matrix::getRows() const { return rows; }
+int Matrix::getRows() const { return _rows; }
 
-int Matrix::getCols() const { return cols; }
+int Matrix::getCols() const { return _cols; }
 
 Matrix Matrix::operator+(const Matrix& other) const {
     Matrix result = *this;
@@ -128,9 +150,9 @@ bool Matrix::operator==(const Matrix& other) const { return eq_matrix(other); }
 
 Matrix& Matrix::operator=(const Matrix& other) {
     if (this != &other) {
-        freeMemory();
-        allocateMemory(other.rows, other.cols);
-        copyMatrix(other.matrix);
+        destroyMatrix();
+        newMatrix(other._rows, other._cols);
+        copyMatrix(other._matrix);
     }
     return *this;
 }
@@ -156,48 +178,49 @@ Matrix Matrix::operator*=(const double num) {
 }
 
 const double& Matrix::operator()(int i, int j) const {
-    if (i >= 0 && i < rows && j >= 0 && j < cols) {
-        return matrix[i][j];
+    if (i >= 0 && i < _rows && j >= 0 && j < _cols) {
+        return _matrix[i][j];
     } else {
         throw std::out_of_range("Incorrect input, index out of matrix sizes");
     }
 }
 
 double& Matrix::operator()(int i, int j) {
-    if (i >= 0 && i < rows && j >= 0 && j < cols) {
-        return matrix[i][j];
+    if (i >= 0 && i < _rows && j >= 0 && j < _cols) {
+        return _matrix[i][j];
     } else {
         throw std::out_of_range("Incorrect input, index out of matrix sizes");
     }
 }
 
 inline bool Matrix::isEqualSizes(const Matrix& other) const {
-    return (rows == other.rows && cols == other.cols);
+    return (_rows == other._rows && _cols == other._cols);
 }
 
-inline bool Matrix::isSquareMatrix() const { return (rows == cols); }
+inline bool Matrix::isSquareMatrix() const { return (_rows == _cols); }
 
-void Matrix::allocateMemory(int rows, int cols) {
-    rows = rows;
-    cols = cols;
-    matrix = new double*[rows];
-    for (int i = 0; i < rows; i++) {
-        matrix[i] = new double[cols]();
+void Matrix::newMatrix(int rows, int cols) {
+    _rows = rows;
+    _cols = cols;
+    _matrix = new double*[_rows];
+    for (int i = 0; i < _rows; i++) {
+        _matrix[i] = new double[_cols]();
     }
 }
 
-void Matrix::freeMemory() {
-    for (int i = 0; i < rows; i++) {
-        delete[] matrix[i];
+void Matrix::destroyMatrix() {
+    for (int i = 0; i < _rows; i++) {
+        delete[] _matrix[i];
     }
-    delete[] matrix;
+    delete[] _matrix;
 }
 
 void Matrix::copyMatrix(double** other_matrix) {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            matrix[i][j] = other_matrix[i][j];
+    for (int i = 0; i < _rows; i++) {
+        for (int j = 0; j < _cols; j++) {
+            _matrix[i][j] = other_matrix[i][j];
         }
     }
 }
+
 }  // namespace s21

@@ -1,12 +1,7 @@
 #include "WinogradAlgorithm.h"
 namespace s21 {
 void correctJoin(std::thread& t) {
-    if (t.joinable()) {
-        // std::cout<<"JOINED\n";
-        t.join();
-    } else {
-        // std::cout<<"NOT JOIN\n";
-    }
+    if (t.joinable()) t.join();
 }
 
 Matrix WinogradAlgorithm::start(TypeOfRun type) {
@@ -53,8 +48,11 @@ Matrix WinogradAlgorithm::runOneThread() {
     Matrix result(firstMatrix.getRows(), secondMatrix.getCols());
     Factor row(firstMatrix.getRows()), col(secondMatrix.getCols());
     calcRowFactor(row);
+    std::cout<<"Correct factor!\n";
     calcColFactor(col);
+    std::cout<<"Correct factor!\n";
     calculation(result, row, col);
+    std::cout<<"Correct factor!\n";
     if ((2 * halfSize) != firstMatrix.getCols()) addToOddMatrix(result);
     return result;
 }
@@ -66,6 +64,7 @@ Matrix WinogradAlgorithm::runWithSetNumOfThreads() {
     threads[0] = std::move(std::thread(&WinogradAlgorithm::calcRowFactor, this, std::ref(row)));
     threads[1] = std::move(std::thread(&WinogradAlgorithm::calcColFactor, this, std::ref(col)));
     threads[0].join(), threads[1].join();
+    std::cout<<"Correct factor!\n";
     calculationWithNumberOfThreads(result, row, col);
     std::cout<<"End calc\n";
     if ((2 * halfSize) != firstMatrix.getCols()) addToOddMatrix(result);
@@ -76,14 +75,10 @@ void WinogradAlgorithm::calculationWithNumberOfThreads(Matrix& result, const Fac
                                                        const Factor& col) {
     int i=0;
     for (i = 0; i < firstMatrix.getRows(); ++i) {
-        // std::cout<<"i = "<<i<<'\n';
-        // std::cout<<"Num of thread:"<<i % (threads.size()-1)<<'\n';
         correctJoin(threads[i % (threads.size()-1)]);
         threads[i % (threads.size()-1)] = std::move(std::thread(&WinogradAlgorithm::calcRowValues, this, std::ref(result),
                                            std::ref(row), std::ref(col), i));
-        // std::cout<<"GOOD CREATE THREAD\n";
     }
-    // std::cout<<"JOIN ALL THREADS\n";
     for (int j = 0; j < i; ++j) {
         correctJoin(threads[j % (threads.size())]);
     }
@@ -127,9 +122,9 @@ void WinogradAlgorithm::calcRowFactor(Factor& row) {
 
 void WinogradAlgorithm::calcColFactor(Factor& col) {
     for (int i = 0; i < secondMatrix.getCols(); ++i) {
-        col[i] = firstMatrix(0, i) * firstMatrix(1, i);
+        col[i] = secondMatrix(0, i) * secondMatrix(1, i);
         for (int j = 1; j < halfSize; ++j) {
-            col[i] += (firstMatrix(2 * j, i) * firstMatrix(2 * j + 1, i));
+            col[i] += (secondMatrix(2 * j, i) * secondMatrix(2 * j + 1, i));
         }
     }
 }
@@ -159,11 +154,10 @@ void WinogradAlgorithm::calcColFactorConveyor(std::queue<double>& queueForCol) {
     double tempValue = 0.0;
     for (int i = 0; i < secondMatrix.getCols(); ++i) {
         tempValue = 0.0;
-        tempValue = firstMatrix(0, i) * firstMatrix(1, i);
+        tempValue = secondMatrix(0, i) * secondMatrix(1, i);
         for (int j = 1; j < halfSize; ++j) {
-            tempValue += (firstMatrix(2 * j, i) * firstMatrix(2 * j + 1, i));
+            tempValue += (secondMatrix(2 * j, i) * secondMatrix(2 * j + 1, i));
         }
-        // std::cout << "ColFactorConv " << i << ' ' << tempValue << '\n';
         queueForCol.push(tempValue);
     }
 }

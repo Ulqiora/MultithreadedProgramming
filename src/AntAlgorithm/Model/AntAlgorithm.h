@@ -8,7 +8,7 @@
 #include <future>
 #include "TsmResult.h"
 #include "Ant.h"
-#include "../SharedFiles/TypeOfRun.h"
+#include "../../SharedFiles/TypeOfRun.h"
 namespace s21 {
 
 class AntAlgorithm {

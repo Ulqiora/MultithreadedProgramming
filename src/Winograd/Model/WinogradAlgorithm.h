@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "../../SharedFiles/TypeOfRun.h"
-#include "Matrix.h"
+#include "../../SharedFiles/Matrix.h"
 namespace s21 {
 using Factor = std::vector<double>;
 

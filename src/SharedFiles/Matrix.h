@@ -1,5 +1,9 @@
 #pragma once
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <cmath>
+#include <stdexcept>
 namespace s21 {
 
 class Matrix {
@@ -36,13 +40,16 @@ class Matrix {
     double& operator()(int i, int j);
     void setRandom(int rows, int cols);
     void print() {
-            for (int i = 0; i < _rows; i++) {
-                for (int j = 0; j < _cols; j++) {
-                    std::cout << _matrix[i][j] << '\t';
-                }
-                std::cout << std::endl;
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < _cols; j++) {
+                std::cout << _matrix[i][j] << '\t';
             }
+            std::cout << std::endl;
+        }
     }
+    void loadMatrix(std::ifstream& file);
+    void setSize(int newRows, int newCols);
+    void createMatrix();
 
    private:
     inline bool isEqualSizes(const Matrix& other) const;

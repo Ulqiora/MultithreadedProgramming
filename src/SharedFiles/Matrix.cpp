@@ -20,6 +20,62 @@ void Matrix::setRandom(int rows, int cols)
     }
 }
 
+
+void Matrix::loadMatrix(std::ifstream& file)
+{
+  std::string temp = "", tempCol = "";
+  file >> temp;
+  if (isdigit(temp[0]) && temp[0] != '-') {
+    file >> tempCol;
+    if (isdigit(tempCol[0]) && tempCol[0] != '-')
+      setSize(std::stoi(temp), std::stoi(tempCol));
+  } else {
+    throw std::invalid_argument("invalid matrix");
+  }
+  for (int i = 0; i < _rows; i++) {
+    for (int j = 0; j < _cols; j++) {
+      file >> temp;
+      if (isdigit(temp[0]) || (isdigit(temp[1]) && temp[0] == '-'))
+        _matrix[i][j] = std::stod(temp);
+      else
+        throw std::invalid_argument("file error");
+    }
+  }
+}
+
+
+void Matrix::setSize(int newRows, int newCols) {
+  if (newRows < 1 || newCols < 1) throw std::invalid_argument("size < 1");
+  if (newRows == _rows && newCols == _cols) return;
+  Matrix copy(*this);
+  destroyMatrix();
+  _rows = newRows;
+  _cols = newCols;
+  newMatrix(_rows, _cols);
+  copyMatrix(copy._matrix);
+}
+
+void Matrix::createMatrix() {
+  std::string tempRow = "", tempCol = "";
+  std::cin >> tempRow;
+  std::cin >> tempCol;
+  if (!isdigit(tempRow[0]) || !isdigit(tempCol[0]) || tempRow[0] == '-' || tempCol[0] == '-') {
+    throw std::invalid_argument("invalid size");
+  } else {
+    setSize(std::stoi(tempRow), std::stoi(tempCol));
+    for (int i = 0; i < _rows; i++) {
+      for (int j = 0; j < _cols; j++) {
+        std::string tempEl;
+        std::cin >> tempEl;
+        if (isdigit(tempEl[0]) || (isdigit(tempEl[1]) && tempEl[0] == '-'))
+          _matrix[i][j] = std::stod(tempEl);
+        else
+          throw std::invalid_argument("invalid value");
+      }
+    }
+  }
+}
+
 // Constructors
 Matrix::Matrix() { newMatrix(3, 3); }
 

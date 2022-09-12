@@ -4,7 +4,7 @@ CXX_FLAGS=-c #-Wall -Werror -Wextra -Wfloat-equal -Warray-bounds -std=c++17
 LCOVFLAGS=-fprofile-arcs -ftest-coverage
 GTESTFLAGS=-lgtest
 
-.PHONY: winograd
+.PHONY: winograd ant
 
 ifeq ($(shell uname -s), Linux)
 	GTESTFLAGS+= -lpthread -lrt
@@ -13,26 +13,27 @@ endif
 ##       Model and View 
 WINOGRAD_SOURCES= main_winograd.cpp Matrix.cpp WinogradAlgorithm.cpp WinogradView.cpp
 WINOGRAD_OBJECTS=$(addprefix $(BD)/,$(WINOGRAD_SOURCES:.cpp=.o))
-##       Tests
-WINOGRAD_SOURCES= main_winograd.cpp Matrix.cpp WinogradAlgorithm.cpp WinogradView.cpp
-WINOGRAD_OBJECTS=$(addprefix $(BD)/,$(WINOGRAD_SOURCES:.cpp=.o))
 ###      Ant Algorithm
 ##       Model and View 
-ANT_SOURCES= main_debug.cpp SquareMatrix.cpp graph.cpp Ant.cpp AntAlgorithm.cpp 
+ANT_SOURCES= main_ant.cpp SquareMatrix.cpp graph.cpp Ant.cpp AntAlgorithm.cpp AntView.cpp
 ANT_OBJECTS=$(addprefix $(BD)/,$(ANT_SOURCES:.cpp=.o))
-##       Tests
-ANT_SOURCES= main_debug.cpp Matrix.cpp ANTAlgorithm.cpp ANTView.cpp
-ANT_OBJECTS=$(addprefix $(BD)/,$(ANT_SOURCES:.cpp=.o))
-#              Файлы для тестов
-# TESTS_FILES_SOURCES=main_test.cpp Matrix.cpp graph.cpp GraphAlgorithms.cpp MatrixBnB.cpp Ant.cpp AntAlgorithm.cpp ConsoleView.cpp
-# TESTS_FILES_OBJECTS=$(addprefix $(BD)/,$(TESTS_FILES_SOURCES:.cpp=.o))
+###      SLE Algorithm
+##       Model and View 
+SLE_SOURCES= main_sle.cpp Matrix.cpp SLEAlgorithm.cpp SLEConsoleView.cpp
+SLE_OBJECTS=$(addprefix $(BD)/,$(SLE_SOURCES:.cpp=.o))
 
 
 winograd:clean $(WINOGRAD_OBJECTS)
 	$(CC) -g  $(WINOGRAD_OBJECTS) -o $(BD)/$@  -lpthread
 	./$(BD)/$@
 
+ant:clean $(ANT_OBJECTS)
+	$(CC) -g  $(ANT_OBJECTS) -o $(BD)/$@  -lpthread
+	./$(BD)/$@
 
+gauss:clean $(SLE_OBJECTS)
+	$(CC) -g  $(SLE_OBJECTS) -o $(BD)/$@  -lpthread
+	./$(BD)/$@
 
 ./$(BD)/%.o:%.cpp
 	$(CC) $(CXX_FLAGS) $< -o $@

@@ -4,37 +4,34 @@
 #include <limits>
 #include <exception>
 
-#include "../Model/WinogradAlgorithm.h"
+#include "../Model/AntAlgorithm.h"
 #include "../../SharedFiles/TimeTest.h"
 
 namespace s21{
 enum class TypeMatrix{Randomly,Manualy};
-class WinogradView{
+class AntView{
 private:
-    WinogradAlgorithm WA;
+    AntAlgorithm AA;
     TimeTest timer;
     const std::string errorMessage="Incorrect input! Repeat again.\n";
     const std::string errorCtrlD="Incorrect input! Re-start program.\n";
-    // bool isValid(std::function<bool(int)>);
+private:
     void printMainWindow();
-    void printChooseTypeInitMatricesWindow();
+    void printSelectAction();
     template<typename T>
     T readFromCin(std::function<bool(T)>& funcOfValid);
     template<typename T>
     T entryWithInvitation(std::string invate,std::function<bool(T)>& funcOfValid);
-    void startMeasuring(std::string paragraphName,int numOfCycles,TypeOfRun,int numOfThreads=-1);
-    void setToAlgorithm(const Matrix& M1,const Matrix& M2,int numOfCycles);
-    Matrix readMatrixFromCin(int row,int col);
-    void showSetMatricesSizeWindow(TypeMatrix typeMatrices);
-    Matrix showSetMatricesValues(TypeMatrix currentChoose,int numberOfMatrix,int row,int col);
-    Matrix setMatricesByTypeForInit(TypeMatrix type,int row,int col,int numberOfMatrix);
+private:
+    void setToAlgorithm(const std::string&);
+    void startMeasuring(std::string paragraphName, int numOfCycles, TypeOfRun type);
 public:
     void show();
 };
 
 
 template<typename T>
-T WinogradView::entryWithInvitation(std::string invate,std::function<bool(T)>& funcOfValid)
+T AntView::entryWithInvitation(std::string invate,std::function<bool(T)>& funcOfValid)
 {
     std::cout << invate;
     try {
@@ -46,7 +43,7 @@ T WinogradView::entryWithInvitation(std::string invate,std::function<bool(T)>& f
 
 
 template<typename T>
-T WinogradView::readFromCin(std::function<bool(T)>& func) {
+T AntView::readFromCin(std::function<bool(T)>& func) {
     T mode;
     try {
         while(std::cin>>mode){

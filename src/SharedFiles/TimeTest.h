@@ -1,7 +1,7 @@
 #pragma once
 #include <any>
 #include <chrono>
-
+#include "TypeOfRun.h"
 namespace s21{
 
 struct TimeTest{

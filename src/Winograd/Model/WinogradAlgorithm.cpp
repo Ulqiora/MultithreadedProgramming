@@ -47,8 +47,11 @@ Matrix WinogradAlgorithm::runMiltiThreadsClassic() {
     threads[0] = std::move(std::thread(&WinogradAlgorithm::calcRowFactor, this, std::ref(row)));
     threads[1] = std::move(std::thread(&WinogradAlgorithm::calcColFactor, this, std::ref(col)));
     threads[0].join(), threads[1].join();
-    calculation(result, row, col);
+    calculationClassicMultiThreads(result, row, col);
     if ((2 * halfSize) != firstMatrix.getCols()) addToOddMatrix(result);
+    for (int j = 0; j < firstMatrix.getRows(); ++j) {
+        threads[j].join();
+    }
     return result;
 }
 
@@ -89,6 +92,15 @@ void WinogradAlgorithm::calculationWithNumberOfThreads(Matrix& result, const Fac
     }
     for (int j = 0; j < i; ++j) {
         correctJoin(threads[j % (threads.size())]);
+    }
+}
+
+void WinogradAlgorithm::calculationClassicMultiThreads(Matrix& result, const Factor& row,
+                                                       const Factor& col){
+    threads.resize(firstMatrix.getRows());
+    for (int i = 0; i < firstMatrix.getRows(); ++i) {
+        threads[i] = std::move(std::thread(&WinogradAlgorithm::calcRowValues, this, std::ref(result),
+                                           std::ref(row), std::ref(col), i));
     }
 }
 

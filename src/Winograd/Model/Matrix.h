@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 namespace s21 {
 
 class Matrix {
@@ -34,6 +35,15 @@ class Matrix {
     const double& operator()(int i, int j) const;
     double& operator()(int i, int j);
     void setRandom(int rows, int cols);
+    void print() {
+            for (int i = 0; i < _rows; i++) {
+                for (int j = 0; j < _cols; j++) {
+                    std::cout << _matrix[i][j] << '\t';
+                }
+                std::cout << std::endl;
+            }
+    }
+
    private:
     inline bool isEqualSizes(const Matrix& other) const;
     inline bool isSquareMatrix() const;

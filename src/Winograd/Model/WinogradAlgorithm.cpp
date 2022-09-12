@@ -5,17 +5,25 @@ void correctJoin(std::thread& t) {
 }
 
 Matrix WinogradAlgorithm::start(TypeOfRun type) {
-    if (!checkSize(firstMatrix, secondMatrix)) throw std::invalid_argument("Error size of matrix!");
+    if (!checkSize(firstMatrix, secondMatrix)) {
+        std::cout<<"Error size of matrix! "<<firstMatrix.getCols()<<' '<<secondMatrix.getRows()<<'\n';
+        throw std::invalid_argument("Error size of matrix!");
+    }
     halfSize = firstMatrix.getCols() / 2;
     if (type == TypeOfRun::ONE) {
+        // std::cout<<"Start one thread\n";
         return runOneThread();
     } else if (type == TypeOfRun::MULTI_CLASSIC) {
+        // std::cout<<"Classic\n";
         return runMiltiThreadsClassic();
     } else if (type == TypeOfRun::MULTI_CONVEYOR) {
+        // std::cout<<"Conveyor\n";
         return runMiltiThreadsConveyor();
     } else if (type == TypeOfRun::MULTI_CLASSIC_WITH_NUM) {
+        // std::cout<<"With num Threads\n";
         return runWithSetNumOfThreads();
     }
+    // std::cout<<"Incorrect type of run algorithm";
     throw std::invalid_argument("Incorrect type of run algorithm");
 }
 
@@ -48,11 +56,11 @@ Matrix WinogradAlgorithm::runOneThread() {
     Matrix result(firstMatrix.getRows(), secondMatrix.getCols());
     Factor row(firstMatrix.getRows()), col(secondMatrix.getCols());
     calcRowFactor(row);
-    std::cout<<"Correct factor!\n";
+    // std::cout<<"Correct factor!\n";
     calcColFactor(col);
-    std::cout<<"Correct factor!\n";
+    // std::cout<<"Correct factor!\n";
     calculation(result, row, col);
-    std::cout<<"Correct factor!\n";
+    // std::cout<<"Correct factor!\n";
     if ((2 * halfSize) != firstMatrix.getCols()) addToOddMatrix(result);
     return result;
 }
@@ -64,9 +72,9 @@ Matrix WinogradAlgorithm::runWithSetNumOfThreads() {
     threads[0] = std::move(std::thread(&WinogradAlgorithm::calcRowFactor, this, std::ref(row)));
     threads[1] = std::move(std::thread(&WinogradAlgorithm::calcColFactor, this, std::ref(col)));
     threads[0].join(), threads[1].join();
-    std::cout<<"Correct factor!\n";
+    // std::cout<<"Correct factor!\n";
     calculationWithNumberOfThreads(result, row, col);
-    std::cout<<"End calc\n";
+    // std::cout<<"End calc\n";
     if ((2 * halfSize) != firstMatrix.getCols()) addToOddMatrix(result);
     return result;
 }

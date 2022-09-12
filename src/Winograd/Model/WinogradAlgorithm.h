@@ -4,7 +4,7 @@
 #include <thread>
 #include <vector>
 
-#include "../SharedFiles/TypeOfRun.h"
+#include "../../SharedFiles/TypeOfRun.h"
 #include "Matrix.h"
 namespace s21 {
 using Factor = std::vector<double>;
@@ -38,7 +38,9 @@ class WinogradAlgorithm {
 
    public:
     void setMatrixFirst(const Matrix& other) { firstMatrix = other; }
+    void setMatrixFirstRandom(int rows,int cols) { firstMatrix.setRandom(rows,cols); }
     void setMatrixSecond(const Matrix& other) { secondMatrix = other; }
+    void setMatrixSecondRandom(int rows,int cols) { secondMatrix.setRandom(rows,cols); }
     void setNumOfThreads(int numberOfThreads) {
         if ((numberOfThreads % 4 == 0 && numberOfThreads <= std::thread::hardware_concurrency()) ||
             numberOfThreads == 2) {

@@ -1,7 +1,6 @@
 #pragma once
 #include <any>
 #include <chrono>
-#include "../AntAlgorithm/AntAlgorithm.h"
 
 namespace s21{
 
@@ -11,8 +10,8 @@ struct TimeTest{
         try {
             auto begin = std::chrono::steady_clock::now();
             for (int i = 0; i < cycleNumber; i++) {
-                Result res = alg.start(type);
-                std::cout<<i<<'\n';
+                // std::cout<<i<<'\n';
+                alg.start(type);
             }
             auto end = std::chrono::steady_clock::now();
             int result = std::chrono::duration_cast<time>(end - begin).count();

@@ -101,29 +101,35 @@ Matrix WinogradView::readMatrixFromCin(int row,int col){
     return result;
 }
 
-void WinogradView::setToAlgorithm(const Matrix& M1,const Matrix& M2,int numOfCycles){
+void WinogradView::setToAlgorithm(const Matrix& M1, const Matrix& M2, int numOfCycles) {
     WA.setMatrixFirst(M1);
     WA.setMatrixSecond(M2);
     try {
-        startMeasuring("Однопоточный режим\n",numOfCycles,TypeOfRun::ONE);
-        startMeasuring("Классический режим\n",numOfCycles,TypeOfRun::MULTI_CLASSIC);
-        startMeasuring("Конвеерный режим режим\n",numOfCycles,TypeOfRun::MULTI_CONVEYOR);
-        startMeasuring("Многопотчность с 2 потоками\n",numOfCycles,TypeOfRun::MULTI_CLASSIC_WITH_NUM,2);
-        for(int i=4;i<=std::thread::hardware_concurrency();i+=4){
-            startMeasuring("Многопотчность с "+std::to_string(i)+" потоками\n",numOfCycles,TypeOfRun::MULTI_CLASSIC_WITH_NUM,i);
+
+        startMeasuring("Однопоточный режим\n", numOfCycles, TypeOfRun::ONE);
+        startMeasuring("Классический режим\n", numOfCycles, TypeOfRun::MULTI_CLASSIC);
+        startMeasuring("Конвеерный режим режим\n", numOfCycles, TypeOfRun::MULTI_CONVEYOR);
+        startMeasuring("Многопотчность с 2 потоками\n", numOfCycles, TypeOfRun::MULTI_CLASSIC_WITH_NUM, 2);
+        for (int i = 4; i <= std::thread::hardware_concurrency(); i += 4) {
+            startMeasuring("Многопотчность с " + std::to_string(i) + " потоками\n", numOfCycles,
+                           TypeOfRun::MULTI_CLASSIC_WITH_NUM, i);
         }
+        startMeasuring("Классический режим\n", 1, TypeOfRun::MULTI_CLASSIC, -1 ,true);
     } catch (const std::exception& e) {
         throw e;
     }
 }
 
-void WinogradView::startMeasuring(std::string paragraphName, int numOfCycles, TypeOfRun type,int numOfThreads) {
+void WinogradView::startMeasuring(std::string paragraphName, int numOfCycles, TypeOfRun type,int numOfThreads,bool printable) {
     if(numOfThreads > 0) WA.setNumOfThreads(numOfThreads); 
     std::cout << paragraphName;
     try {
-        int time =
+        Matrix res =
             timer.startest<WinogradAlgorithm, std::chrono::milliseconds, Matrix>(WA, type, numOfCycles);
-        std::cout << "Длительность выполнения: " << time << '\n';
+        if(printable){
+            std::cout << "-----------------------------------\n";
+            std::cout<<res;
+        }
     } catch (const std::exception& e) {
         throw e;
     }

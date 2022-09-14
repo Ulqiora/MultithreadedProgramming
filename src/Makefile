@@ -15,7 +15,7 @@ WINOGRAD_SOURCES= main_winograd.cpp Matrix.cpp WinogradAlgorithm.cpp WinogradVie
 WINOGRAD_OBJECTS=$(addprefix $(BD)/,$(WINOGRAD_SOURCES:.cpp=.o))
 ###      Ant Algorithm
 ##       Model and View 
-ANT_SOURCES= main_ant.cpp SquareMatrix.cpp graph.cpp Ant.cpp AntAlgorithm.cpp AntView.cpp
+ANT_SOURCES= main_ant.cpp SquareMatrix.cpp graph.cpp Ant.cpp AntAlgorithm.cpp AntView.cpp TsmResult.cpp
 ANT_OBJECTS=$(addprefix $(BD)/,$(ANT_SOURCES:.cpp=.o))
 ###      SLE Algorithm
 ##       Model and View 

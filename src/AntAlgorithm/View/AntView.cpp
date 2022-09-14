@@ -45,8 +45,8 @@ void AntView::setToAlgorithm(const std::string& filename)
         int numOfCycles=entryWithInvitation("Enter number of the cycles: ",validfunctions);
         g.loadGraphFromFile(filename);
         AA.setGraph(&g);
-        startMeasuring("Classic multithreads mode\n",numOfCycles,TypeOfRun::MULTI_CLASSIC);
         startMeasuring("One thread mode\n",numOfCycles,TypeOfRun::ONE);
+        startMeasuring("Classic multithreads mode\n",numOfCycles,TypeOfRun::MULTI_CLASSIC,true);
     }
     catch(const std::exception& e)
     {
@@ -54,12 +54,14 @@ void AntView::setToAlgorithm(const std::string& filename)
     }
 }
 
-void AntView::startMeasuring(std::string paragraphName, int numOfCycles, TypeOfRun type) {
+void AntView::startMeasuring(std::string paragraphName, int numOfCycles, TypeOfRun type, bool printable) {
     std::cout << paragraphName;
     try {
-        int time =
-            timer.startest<AntAlgorithm, std::chrono::milliseconds, SquareMatrix>(AA, type, numOfCycles);
-        std::cout << "Execution time: " << time << '\n';
+        TsmResult res = timer.startest<AntAlgorithm, std::chrono::milliseconds, TsmResult>(AA, type, numOfCycles);
+        if (printable) {
+            std::cout << "-----------------------------------\n";
+            std::cout << res;
+        }
     } catch (const std::exception& e) {
         throw e;
     }

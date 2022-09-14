@@ -24,7 +24,7 @@ private:
     T entryWithInvitation(std::string invate,std::function<bool(T)>& funcOfValid);
 private:
     void setToAlgorithm(const std::string&);
-    void startMeasuring(std::string paragraphName, int numOfCycles, TypeOfRun type);
+    void startMeasuring(std::string paragraphName, int numOfCycles, TypeOfRun type, bool printable = false);
 public:
     void show();
 };

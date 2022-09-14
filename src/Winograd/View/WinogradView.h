@@ -22,7 +22,7 @@ private:
     T readFromCin(std::function<bool(T)>& funcOfValid);
     template<typename T>
     T entryWithInvitation(std::string invate,std::function<bool(T)>& funcOfValid);
-    void startMeasuring(std::string paragraphName,int numOfCycles,TypeOfRun,int numOfThreads=-1);
+    void startMeasuring(std::string paragraphName,int numOfCycles,TypeOfRun,int numOfThreads=-1,bool printable = false);
     void setToAlgorithm(const Matrix& M1,const Matrix& M2,int numOfCycles);
     Matrix readMatrixFromCin(int row,int col);
     void showSetMatricesSizeWindow(TypeMatrix typeMatrices);

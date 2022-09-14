@@ -4,6 +4,7 @@
 #include <string>
 #include <cmath>
 #include <stdexcept>
+#include <iomanip>
 namespace s21 {
 
 class Matrix {
@@ -50,6 +51,7 @@ class Matrix {
     void loadMatrix(std::ifstream& file);
     void setSize(int newRows, int newCols);
     void createMatrix();
+    friend std::ostream& operator<<(std::ostream& os,Matrix cpp);
 
    private:
     inline bool isEqualSizes(const Matrix& other) const;
@@ -58,6 +60,6 @@ class Matrix {
     void destroyMatrix();
     void copyMatrix(double** other_matrix);
 };
-
+std::ostream& operator<<(std::ostream& os,Matrix m);
 Matrix operator*(double num, const Matrix& other);
 }  // namespace s21

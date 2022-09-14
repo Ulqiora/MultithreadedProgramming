@@ -100,7 +100,7 @@ void SLEConsoleView::matrixEnter() {
 void SLEConsoleView::solveMethod() {
   try {
     print(solve);
-    gauss.start();
+    gauss.start(TypeOfRun::ONE);
     gauss.printAnswer();
   } catch (std::exception& e) {
     throw;
@@ -118,8 +118,8 @@ void SLEConsoleView::compareMethod() {
         } else {
             print(compResult);
             s21::TimeTest tt;
-            std::cout << "One thread, ms: " << tt.startest<SLEAlgorithm,std::chrono::milliseconds>(gauss, TypeOfRun::ONE, std::stoi(num)) << '\n';
-            std::cout << "Multithread, ms: " << tt.startest<SLEAlgorithm,std::chrono::milliseconds>(gauss, TypeOfRun::MULTI_CLASSIC, std::stoi(num)) << '\n';
+            std::cout << "One thread, ms: " << tt.startest<SLEAlgorithm,std::chrono::milliseconds,int>(gauss, TypeOfRun::ONE, std::stoi(num)) << '\n';
+            std::cout << "Multithread, ms: " << tt.startest<SLEAlgorithm,std::chrono::milliseconds,int>(gauss, TypeOfRun::MULTI_CLASSIC, std::stoi(num)) << '\n';
         }
     } catch (std::exception& e) {
         throw;

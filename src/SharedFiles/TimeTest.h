@@ -6,16 +6,19 @@ namespace s21{
 
 struct TimeTest{
     template<typename Algorithm,typename time,typename Result>
-    static int startest(Algorithm& alg,TypeOfRun type, int cycleNumber){
+    static Result startest(Algorithm& alg,TypeOfRun type, int cycleNumber){
         try {
+            Result res;
             auto begin = std::chrono::steady_clock::now();
             for (int i = 0; i < cycleNumber; i++) {
-                // std::cout<<i<<'\n';
-                alg.start(type);
+                if (i == 0)
+                    res= alg.start(type);
+                else
+                    alg.start(type);
             }
             auto end = std::chrono::steady_clock::now();
-            int result = std::chrono::duration_cast<time>(end - begin).count();
-            return result;
+            std::cout << "Execution time: " << std::chrono::duration_cast<time>(end - begin).count() << '\n';
+            return res;
         } catch (const std::exception& e) {
             throw e;
         }

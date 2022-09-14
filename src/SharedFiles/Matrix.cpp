@@ -279,4 +279,14 @@ void Matrix::copyMatrix(double** other_matrix) {
     }
 }
 
+std::ostream& operator<<(std::ostream& os,Matrix m){
+    for (int i = 0; i < m._rows; i++) {
+        for (int j = 0; j < m._cols; j++) {
+            os << std::setw(10)<<m._matrix[i][j] << '\t';
+        }
+        os << std::endl;
+    }
+    return os;
+}
+
 }  // namespace s21

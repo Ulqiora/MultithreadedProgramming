@@ -1,18 +1,18 @@
 #pragma once
-#include <iostream>
-#include <fstream>
-#include <string>
 #include <cmath>
-#include <stdexcept>
+#include <fstream>
 #include <iomanip>
+#include <iostream>
+#include <stdexcept>
+#include <string>
 namespace s21 {
 
 class Matrix {
-   private:
+ private:
     int _rows, _cols;
     double** _matrix;
 
-   public:
+ public:
     Matrix();
     Matrix(int rows, int cols);
     Matrix(const Matrix& other);
@@ -51,15 +51,15 @@ class Matrix {
     void loadMatrix(std::ifstream& file);
     void setSize(int newRows, int newCols);
     void createMatrix();
-    friend std::ostream& operator<<(std::ostream& os,Matrix cpp);
+    friend std::ostream& operator<<(std::ostream& os, Matrix cpp);
 
-   private:
+ private:
     inline bool isEqualSizes(const Matrix& other) const;
     inline bool isSquareMatrix() const;
     void newMatrix(int rows, int cols);
     void destroyMatrix();
     void copyMatrix(double** other_matrix);
 };
-std::ostream& operator<<(std::ostream& os,Matrix m);
+std::ostream& operator<<(std::ostream& os, Matrix m);
 Matrix operator*(double num, const Matrix& other);
 }  // namespace s21

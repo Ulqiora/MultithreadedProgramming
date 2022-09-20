@@ -39,7 +39,7 @@ void SLEConsoleView::waitCommand() {
 
 bool SLEConsoleView::isNumber(std::string entry) {
     bool result = true;
-    for (int i = 0; i < entry.size(); i++) {
+    for (unsigned int i = 0; i < entry.size(); i++) {
         if (!std::isdigit(entry[i])) {
             result = false;
         }
@@ -48,7 +48,7 @@ bool SLEConsoleView::isNumber(std::string entry) {
 }
 
 void SLEConsoleView::chooseCommand() {
-    switch(curCommand) {
+    switch (curCommand) {
         case mainMenu:
             print(mainMenu);
             break;
@@ -87,25 +87,25 @@ void SLEConsoleView::fileLoad() {
 }
 
 void SLEConsoleView::matrixEnter() {
-  try {
-    print(createMatrix);
-    gauss.createMatrix();
-    std::cout << "Matrix created successfully\n";
-  } catch (std::exception& e) {
-    throw;
-  }
-  runMenu();
+    try {
+        print(createMatrix);
+        gauss.createMatrix();
+        std::cout << "Matrix created successfully\n";
+    } catch (std::exception& e) {
+        throw;
+    }
+    runMenu();
 }
 
 void SLEConsoleView::solveMethod() {
-  try {
-    print(solve);
-    gauss.start(TypeOfRun::ONE);
-    gauss.printAnswer();
-  } catch (std::exception& e) {
-    throw;
-  }
-  runMenu();
+    try {
+        print(solve);
+        gauss.start(TypeOfRun::ONE);
+        gauss.printAnswer();
+    } catch (std::exception& e) {
+        throw;
+    }
+    runMenu();
 }
 
 void SLEConsoleView::compareMethod() {
@@ -118,8 +118,14 @@ void SLEConsoleView::compareMethod() {
         } else {
             print(compResult);
             s21::TimeTest tt;
-            std::cout << "One thread, ms: " << tt.startest<SLEAlgorithm,std::chrono::milliseconds,int>(gauss, TypeOfRun::ONE, std::stoi(num)) << '\n';
-            std::cout << "Multithread, ms: " << tt.startest<SLEAlgorithm,std::chrono::milliseconds,int>(gauss, TypeOfRun::MULTI_CLASSIC, std::stoi(num)) << '\n';
+            std::cout << "One thread, ms: "
+                      << tt.startest<SLEAlgorithm, std::chrono::milliseconds, SLEResult>(
+                             gauss, TypeOfRun::ONE, std::stoi(num))
+                      << '\n';
+            std::cout << "Multithread, ms: "
+                      << tt.startest<SLEAlgorithm, std::chrono::milliseconds, SLEResult>(
+                             gauss, TypeOfRun::MULTI_CLASSIC, std::stoi(num))
+                      << '\n';
         }
     } catch (std::exception& e) {
         throw;

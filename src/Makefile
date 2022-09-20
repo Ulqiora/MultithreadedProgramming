@@ -1,6 +1,6 @@
 CC=g++
 BD=../build
-CXX_FLAGS=-c #-Wall -Werror -Wextra -Wfloat-equal -Warray-bounds -std=c++17
+CXX_FLAGS=-c -Wall -Werror -Wextra -std=c++17
 LCOVFLAGS=-fprofile-arcs -ftest-coverage
 GTESTFLAGS=-lgtest
 
@@ -19,7 +19,7 @@ ANT_SOURCES= main_ant.cpp SquareMatrix.cpp graph.cpp Ant.cpp AntAlgorithm.cpp An
 ANT_OBJECTS=$(addprefix $(BD)/,$(ANT_SOURCES:.cpp=.o))
 ###      SLE Algorithm
 ##       Model and View 
-SLE_SOURCES= main_sle.cpp Matrix.cpp SLEAlgorithm.cpp SLEConsoleView.cpp
+SLE_SOURCES= main_sle.cpp Matrix.cpp SLEAlgorithm.cpp SLEConsoleView.cpp SLEResult.cpp
 SLE_OBJECTS=$(addprefix $(BD)/,$(SLE_SOURCES:.cpp=.o))
 
 
@@ -50,4 +50,9 @@ gauss:clean $(SLE_OBJECTS)
 clean:
 	rm -rf $(BD)/*.*
 	rm -rf $(BD)/*
+
+cpplint:
+	cp -f ../materials/linters/CPPLINT.cfg ./
+	python3 ../materials/linters/cpplint.py --extensions=cpp ../src/*/*.h ../src/*/*.cpp ../src/*/*/*.h ../src/*/*/*.cpp
+	rm -rf CPPLINT.cfg
 	

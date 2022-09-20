@@ -1,18 +1,20 @@
 #pragma once
 #include <any>
 #include <chrono>
-#include "TypeOfRun.h"
-namespace s21{
+#include <iostream>
 
-struct TimeTest{
-    template<typename Algorithm,typename time,typename Result>
-    static Result startest(Algorithm& alg,TypeOfRun type, int cycleNumber){
+#include "TypeOfRun.h"
+namespace s21 {
+
+struct TimeTest {
+    template <typename Algorithm, typename time, typename Result>
+    static Result startest(Algorithm& alg, TypeOfRun type, int cycleNumber) {
         try {
             Result res;
             auto begin = std::chrono::steady_clock::now();
             for (int i = 0; i < cycleNumber; i++) {
                 if (i == 0)
-                    res= alg.start(type);
+                    res = alg.start(type);
                 else
                     alg.start(type);
             }
@@ -24,4 +26,4 @@ struct TimeTest{
         }
     }
 };
-}
+}  // namespace s21

@@ -1,15 +1,14 @@
 #include "Matrix.h"
 
 #include <cmath>
-#include <stdexcept>
 #include <random>
+#include <stdexcept>
 namespace s21 {
 
-void Matrix::setRandom(int rows, int cols)
-{
+void Matrix::setRandom(int rows, int cols) {
     if (!(rows > 0 && cols > 0)) std::out_of_range("Incorrect input, matrix should have both sizes > 0");
     destroyMatrix();
-    newMatrix(rows,cols);
+    newMatrix(rows, cols);
     std::random_device rd;
     std::default_random_engine engine(rd());
     std::uniform_real_distribution<double> dist(-100, 100);
@@ -20,60 +19,56 @@ void Matrix::setRandom(int rows, int cols)
     }
 }
 
-
-void Matrix::loadMatrix(std::ifstream& file)
-{
-  std::string temp = "", tempCol = "";
-  file >> temp;
-  if (isdigit(temp[0]) && temp[0] != '-') {
-    file >> tempCol;
-    if (isdigit(tempCol[0]) && tempCol[0] != '-')
-      setSize(std::stoi(temp), std::stoi(tempCol));
-  } else {
-    throw std::invalid_argument("invalid matrix");
-  }
-  for (int i = 0; i < _rows; i++) {
-    for (int j = 0; j < _cols; j++) {
-      file >> temp;
-      if (isdigit(temp[0]) || (isdigit(temp[1]) && temp[0] == '-'))
-        _matrix[i][j] = std::stod(temp);
-      else
-        throw std::invalid_argument("file error");
+void Matrix::loadMatrix(std::ifstream& file) {
+    std::string temp = "", tempCol = "";
+    file >> temp;
+    if (isdigit(temp[0]) && temp[0] != '-') {
+        file >> tempCol;
+        if (isdigit(tempCol[0]) && tempCol[0] != '-') setSize(std::stoi(temp), std::stoi(tempCol));
+    } else {
+        throw std::invalid_argument("invalid matrix");
     }
-  }
+    for (int i = 0; i < _rows; i++) {
+        for (int j = 0; j < _cols; j++) {
+            file >> temp;
+            if (isdigit(temp[0]) || (isdigit(temp[1]) && temp[0] == '-'))
+                _matrix[i][j] = std::stod(temp);
+            else
+                throw std::invalid_argument("file error");
+        }
+    }
 }
 
-
 void Matrix::setSize(int newRows, int newCols) {
-  if (newRows < 1 || newCols < 1) throw std::invalid_argument("size < 1");
-  if (newRows == _rows && newCols == _cols) return;
-  Matrix copy(*this);
-  destroyMatrix();
-  _rows = newRows;
-  _cols = newCols;
-  newMatrix(_rows, _cols);
-  copyMatrix(copy._matrix);
+    if (newRows < 1 || newCols < 1) throw std::invalid_argument("size < 1");
+    if (newRows == _rows && newCols == _cols) return;
+    Matrix copy(*this);
+    destroyMatrix();
+    _rows = newRows;
+    _cols = newCols;
+    newMatrix(_rows, _cols);
+    copyMatrix(copy._matrix);
 }
 
 void Matrix::createMatrix() {
-  std::string tempRow = "", tempCol = "";
-  std::cin >> tempRow;
-  std::cin >> tempCol;
-  if (!isdigit(tempRow[0]) || !isdigit(tempCol[0]) || tempRow[0] == '-' || tempCol[0] == '-') {
-    throw std::invalid_argument("invalid size");
-  } else {
-    setSize(std::stoi(tempRow), std::stoi(tempCol));
-    for (int i = 0; i < _rows; i++) {
-      for (int j = 0; j < _cols; j++) {
-        std::string tempEl;
-        std::cin >> tempEl;
-        if (isdigit(tempEl[0]) || (isdigit(tempEl[1]) && tempEl[0] == '-'))
-          _matrix[i][j] = std::stod(tempEl);
-        else
-          throw std::invalid_argument("invalid value");
-      }
+    std::string tempRow = "", tempCol = "";
+    std::cin >> tempRow;
+    std::cin >> tempCol;
+    if (!isdigit(tempRow[0]) || !isdigit(tempCol[0]) || tempRow[0] == '-' || tempCol[0] == '-') {
+        throw std::invalid_argument("invalid size");
+    } else {
+        setSize(std::stoi(tempRow), std::stoi(tempCol));
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < _cols; j++) {
+                std::string tempEl;
+                std::cin >> tempEl;
+                if (isdigit(tempEl[0]) || (isdigit(tempEl[1]) && tempEl[0] == '-'))
+                    _matrix[i][j] = std::stod(tempEl);
+                else
+                    throw std::invalid_argument("invalid value");
+            }
+        }
     }
-  }
 }
 
 // Constructors
@@ -87,9 +82,7 @@ Matrix::Matrix(int rows, int cols) {
     }
 }
 
-Matrix::Matrix(const Matrix& other) : Matrix(other._rows, other._cols) {
-    copyMatrix(other._matrix);
-}
+Matrix::Matrix(const Matrix& other) : Matrix(other._rows, other._cols) { copyMatrix(other._matrix); }
 
 Matrix::Matrix(Matrix&& other) {
     _rows = other._rows;
@@ -279,10 +272,10 @@ void Matrix::copyMatrix(double** other_matrix) {
     }
 }
 
-std::ostream& operator<<(std::ostream& os,Matrix m){
+std::ostream& operator<<(std::ostream& os, Matrix m) {
     for (int i = 0; i < m._rows; i++) {
         for (int j = 0; j < m._cols; j++) {
-            os << std::setw(10)<<m._matrix[i][j] << '\t';
+            os << std::setw(10) << m._matrix[i][j] << '\t';
         }
         os << std::endl;
     }

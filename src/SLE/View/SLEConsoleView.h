@@ -1,11 +1,12 @@
 #pragma once
 
+#include <exception>
 #include <iostream>
 #include <vector>
-#include <exception>
-#include "../Model/SLEAlgorithm.h"
+
 #include "../../SharedFiles/TimeTest.h"
 #include "../../SharedFiles/TypeOfRun.h"
+#include "../Model/SLEAlgorithm.h"
 
 namespace s21 {
 class SLEConsoleView {
@@ -21,20 +22,20 @@ class SLEConsoleView {
         wrongCommand = 7
     };
 
-    std::vector<std::string> printable {
-        "Choose the command:\n" \
-        "1. Load matrix from file\n" \
-        "2. Enter matrix from keyboard\n" \
-        "3. Solve matrix (one thread)\n" \
-        "4. Compare one thread and multithread solve\n" \
-        "5. Exit\n",  // 0
-        "Enter file path:\n",  // 1
+    std::vector<std::string> printable{
+        "Choose the command:\n"
+        "1. Load matrix from file\n"
+        "2. Enter matrix from keyboard\n"
+        "3. Solve matrix (one thread)\n"
+        "4. Compare one thread and multithread solve\n"
+        "5. Exit\n",                                // 0
+        "Enter file path:\n",                       // 1
         "Enter size and then values of matrix:\n",  // 2
-        "Result of solving in one thread:\n",  // 3
-        "Enter number of cycles:\n",  // 4
-        "Exiting program\n",  // 5
-        "Result of comparison:\n",  // 6
-        "Wrong command, try again\n"  // 7
+        "Result of solving in one thread:\n",       // 3
+        "Enter number of cycles:\n",                // 4
+        "Exiting program\n",                        // 5
+        "Result of comparison:\n",                  // 6
+        "Wrong command, try again\n"                // 7
     };
 
     SLEAlgorithm gauss;

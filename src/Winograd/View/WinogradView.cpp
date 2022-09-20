@@ -13,7 +13,7 @@ void WinogradView::show() {
             if (!typeMatrices) continue;
             showSetMatricesSizeWindow(static_cast<TypeMatrix>(typeMatrices));
         } catch (const std::domain_error& e) {
-            std::cout<<e.what()<<"."<<errorCtrlD;
+            std::cout << e.what() << "." << errorCtrlD;
             typeMatrices = 0;
         }
     }
@@ -35,41 +35,37 @@ void WinogradView::printChooseTypeInitMatricesWindow() {
     std::cout << "0 - Exit.\n";
 }
 
-void WinogradView::showSetMatricesSizeWindow(TypeMatrix typeMatrices){
-    int TypeOfMatrices,rowsFirst,colsFirst,rowsSecond,colsSecond,numOfCycles;
-    std::function<bool(int)> validfunctions = ([](int a) { return a>0; });
-    std::function<bool(int)> validfunctions2 = ([&colsFirst](int a) { return a==colsFirst; });
+void WinogradView::showSetMatricesSizeWindow(TypeMatrix typeMatrices) {
+    int rowsFirst, colsFirst, rowsSecond, colsSecond, numOfCycles;
+    std::function<bool(int)> validfunctions = ([](int a) { return a > 0; });
+    std::function<bool(int)> validfunctions2 = ([&colsFirst](int a) { return a == colsFirst; });
     Matrix first, second;
-    while (true){
-        try
-        {
-            rowsFirst=entryWithInvitation<int>("Введите число строк первой матрицы: ",validfunctions);
-            colsFirst=entryWithInvitation<int>("Введите число столбцов первой матрицы: ",validfunctions);
-            rowsSecond=entryWithInvitation<int>("Введите число строк второй матрицы: ",validfunctions2);
-            colsSecond=entryWithInvitation<int>("Введите число столбцов второй матрицы: ",validfunctions);
-            first = setMatricesByTypeForInit(typeMatrices,rowsFirst,colsFirst,1);
-            second = setMatricesByTypeForInit(typeMatrices,rowsSecond,colsSecond,2);
-            numOfCycles=entryWithInvitation<int>("Введите число циклов: ",validfunctions);
+    while (true) {
+        try {
+            rowsFirst = entryWithInvitation<int>("Введите число строк первой матрицы: ", validfunctions);
+            colsFirst = entryWithInvitation<int>("Введите число столбцов первой матрицы: ", validfunctions);
+            rowsSecond = entryWithInvitation<int>("Введите число строк второй матрицы: ", validfunctions2);
+            colsSecond = entryWithInvitation<int>("Введите число столбцов второй матрицы: ", validfunctions);
+            first = setMatricesByTypeForInit(typeMatrices, rowsFirst, colsFirst, 1);
+            second = setMatricesByTypeForInit(typeMatrices, rowsSecond, colsSecond, 2);
+            numOfCycles = entryWithInvitation<int>("Введите число циклов: ", validfunctions);
             setToAlgorithm(first, second, numOfCycles);
             break;
-        } catch(const std::exception& e) {
+        } catch (const std::exception& e) {
             throw e;
         }
     }
 }
 
-
-Matrix WinogradView::setMatricesByTypeForInit(TypeMatrix type,int row,int col,int numberOfMatrix)
-{
+Matrix WinogradView::setMatricesByTypeForInit(TypeMatrix type, int row, int col, int numberOfMatrix) {
     if (type == TypeMatrix::Manualy) {
         return showSetMatricesValues(type, numberOfMatrix, row, col);
     } else {
         Matrix res;
-        res.setRandom(row,col);
+        res.setRandom(row, col);
         return res;
     }
 }
-
 
 Matrix WinogradView::showSetMatricesValues(TypeMatrix currentChoose, int numberOfMatrix, int row, int col) {
     Matrix result;
@@ -77,7 +73,7 @@ Matrix WinogradView::showSetMatricesValues(TypeMatrix currentChoose, int numberO
         result.setRandom(row, col);
     } else {
         try {
-            std::cout<<"Input "<<numberOfMatrix<<"matrix\n";
+            std::cout << "Input " << numberOfMatrix << "matrix\n";
             result = readMatrixFromCin(row, col);
         } catch (const std::exception& e) {
             throw e;
@@ -86,8 +82,8 @@ Matrix WinogradView::showSetMatricesValues(TypeMatrix currentChoose, int numberO
     return result;
 }
 
-Matrix WinogradView::readMatrixFromCin(int row,int col){
-    std::function<bool(double)> validFunction = [](double a) { return true; };
+Matrix WinogradView::readMatrixFromCin(int row, int col) {
+    std::function<bool(double)> validFunction = [](double a) { return (a == 0) || true; };
     Matrix result(row, col);
     try {
         for (int i = 0; i < result.getRows(); i++) {
@@ -105,30 +101,30 @@ void WinogradView::setToAlgorithm(const Matrix& M1, const Matrix& M2, int numOfC
     WA.setMatrixFirst(M1);
     WA.setMatrixSecond(M2);
     try {
-
         startMeasuring("Однопоточный режим\n", numOfCycles, TypeOfRun::ONE);
         startMeasuring("Классический режим\n", numOfCycles, TypeOfRun::MULTI_CLASSIC);
         startMeasuring("Конвеерный режим режим\n", numOfCycles, TypeOfRun::MULTI_CONVEYOR);
         startMeasuring("Многопотчность с 2 потоками\n", numOfCycles, TypeOfRun::MULTI_CLASSIC_WITH_NUM, 2);
-        for (int i = 4; i <= std::thread::hardware_concurrency(); i += 4) {
+        for (int i = 4; i <= (int)std::thread::hardware_concurrency(); i += 4) {
             startMeasuring("Многопотчность с " + std::to_string(i) + " потоками\n", numOfCycles,
                            TypeOfRun::MULTI_CLASSIC_WITH_NUM, i);
         }
-        startMeasuring("Классический режим\n", 1, TypeOfRun::MULTI_CLASSIC, -1 ,true);
+        startMeasuring("Классический режим\n", 1, TypeOfRun::MULTI_CLASSIC, -1, true);
     } catch (const std::exception& e) {
         throw e;
     }
 }
 
-void WinogradView::startMeasuring(std::string paragraphName, int numOfCycles, TypeOfRun type,int numOfThreads,bool printable) {
-    if(numOfThreads > 0) WA.setNumOfThreads(numOfThreads); 
+void WinogradView::startMeasuring(std::string paragraphName, int numOfCycles, TypeOfRun type,
+                                  int numOfThreads, bool printable) {
+    if (numOfThreads > 0) WA.setNumOfThreads(numOfThreads);
     std::cout << paragraphName;
     try {
         Matrix res =
             timer.startest<WinogradAlgorithm, std::chrono::milliseconds, Matrix>(WA, type, numOfCycles);
-        if(printable){
+        if (printable) {
             std::cout << "-----------------------------------\n";
-            std::cout<<res;
+            std::cout << res;
         }
     } catch (const std::exception& e) {
         throw e;

@@ -1,7 +1,6 @@
 #include "AntAlgorithm.h"
 
 namespace s21 {
-// std::mutex mtx;
 void AntAlgorithm::initPheromonesMap() {
     pheromoneMap.setSize(graph->size());
     for (int i = 0; i < pheromoneMap.size(); ++i) {
@@ -18,7 +17,7 @@ void AntAlgorithm::updatePheromoneMap() {
     }
 }
 
-void AntAlgorithm::updateTsmResult(TsmResult* result, int& numOfIteration) {
+void AntAlgorithm::updateTsmResult(TsmResult* result) {
     std::list<double> paths;
     for (auto& ant : ants) paths.push_back(ant.getPathLength());
     double minimumPath = *(std::min_element(paths.begin(), paths.end()));
@@ -68,7 +67,7 @@ TsmResult AntAlgorithm::start(TypeOfRun type) {
             runAntMultiThreads();
         for (int i = 0; i < graph->size(); ++i) ants[i].findPath(graph, pheromoneMap);
         updatePheromoneMap();
-        updateTsmResult(&result, numOfIteration);
+        updateTsmResult(&result);
     }
     for (auto& i : result.vertices) i++;
     return result;

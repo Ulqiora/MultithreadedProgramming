@@ -1,8 +1,9 @@
+#include <chrono>
 #include <iostream>
 #include <thread>
-#include <chrono>
+
 #include "AntView.h"
-int main(){
+int main() {
     s21::AntView AV;
     AV.show();
     return 0;

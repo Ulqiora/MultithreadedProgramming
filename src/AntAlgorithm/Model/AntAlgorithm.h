@@ -1,18 +1,19 @@
 #pragma once
 #include <algorithm>
-#include <list>
-#include <vector>
-#include <mutex>
-#include <thread>
 #include <functional>
 #include <future>
-#include "TsmResult.h"
-#include "Ant.h"
+#include <list>
+#include <mutex>
+#include <thread>
+#include <vector>
+
 #include "../../SharedFiles/TypeOfRun.h"
+#include "Ant.h"
+#include "TsmResult.h"
 namespace s21 {
 
 class AntAlgorithm {
-private:
+ private:
     Graph* graph = nullptr;
     SquareMatrix pheromoneMap;
     std::vector<Ant> ants;
@@ -24,9 +25,10 @@ private:
     void runAntOneThread();
     void runAntMultiThreads();
     void updatePheromoneMap();
-    void updateTsmResult(TsmResult* result,int& numOfIteration);
+    void updateTsmResult(TsmResult* result);
     void createAnts();
-   public:
+
+ public:
     AntAlgorithm() = default;
     void setGraph(Graph*);
     TsmResult start(TypeOfRun);

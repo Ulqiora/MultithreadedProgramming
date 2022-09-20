@@ -8,7 +8,7 @@
 namespace s21 {
 
 class Ant {
-   private:
+ private:
     std::vector<bool> passedCity;
     std::vector<int> path;
     double proximityRatio = 1.0;
@@ -17,17 +17,18 @@ class Ant {
     double pathLength = 0;
     int getRamdomValue(int minimum, int maximum);
 
-   private:
+ private:
     void initToStart(int sizeOfGraph);
     std::map<int, double>* createDictionaryOfAvailablePaths(Graph* graph);
-    double calculateNumerator(std::map<int, double>* dictionaryOfAvailablePaths, const SquareMatrix& pheromonesMap,
-                              int currentIndex);
-    double calcDenominator(std::map<int, double>* dictionaryOfAvailablePaths, const SquareMatrix& pheromonesMap);
+    double calculateNumerator(std::map<int, double>* dictionaryOfAvailablePaths,
+                              const SquareMatrix& pheromonesMap, int currentIndex);
+    double calcDenominator(std::map<int, double>* dictionaryOfAvailablePaths,
+                           const SquareMatrix& pheromonesMap);
     std::map<int, double>* calcProbabilities(Graph* graph, const SquareMatrix& pheromonesMap);
 
     void chooseWay(Graph* graph, std::map<int, double>* probabilities);
 
-   public:
+ public:
     Ant() = default;
     void findPath(Graph* graph, const SquareMatrix& pheromonesMap);
     void updatePheromones(SquareMatrix* pheromonesMap);
